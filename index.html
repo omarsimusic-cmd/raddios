@@ -2,838 +2,853 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FinLay Radio &amp; Viejas Románticas - En Vivo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Radios de Omarsi</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+    html, body { min-height: 100%; }
     body {
-      background: radial-gradient(circle at 50% 50%, #2b2b2b, #0a0a0a);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #eef2f7 0%, #f7f8fb 40%, #ffffff 100%);
+      color: #111;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      overflow-x: hidden;
-      padding: 30px 20px 50px;
-      gap: 40px;
+      padding: 18px 14px 40px;
     }
 
-    .section-title {
+    .page-header {
       width: 100%;
-      max-width: 380px;
+      max-width: 420px;
       text-align: center;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: -20px;
-      text-transform: uppercase;
-      opacity: 0.9;
+      margin-bottom: 18px;
+    }
+    .brand-logo {
+      width: min(50px, 40vw);
+      height: auto;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(22px, 5.5vw, 28px);
+      font-weight: 800;
+      line-height: 1.2;
+      color: #111;
+      letter-spacing: -0.3px;
+    }
+    .page-subtitle {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #667085;
+      font-weight: 500;
     }
 
-    /* CONTENEDOR PRINCIPAL ESTILO SPOTIFY */
-    .player-container {
+    .player-shell {
       width: 100%;
-      max-width: 380px;
-      border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-      display: flex;
-      flex-direction: column;
-      padding: 30px 20px 25px 20px;
+      max-width: 420px;
+      background: #0f1115;
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 22px 50px rgba(15, 17, 21, 0.35);
       color: #fff;
     }
 
-    /* CLASES DE TEMAS DE COLOR */
-    .theme-dark       { background: linear-gradient(180deg, #2a2a2a 0%, #121212 40%, #121212 100%); }
-    .theme-brick      { background: linear-gradient(180deg, #8b3a3a 0%, #3e1212 40%, #121212 100%); }
-    .theme-green      { background: linear-gradient(180deg, #2e4f2e 0%, #0f240f 40%, #121212 100%); }
-    .theme-brown      { background: linear-gradient(180deg, #6b4c3a 0%, #362216 40%, #121212 100%); }
-    .theme-blue       { background: linear-gradient(180deg, #1a365d 0%, #0f172a 40%, #121212 100%); }
-    .theme-gray       { background: linear-gradient(180deg, #52525b 0%, #27272a 40%, #121212 100%); }
-    .theme-pink       { background: linear-gradient(180deg, #be185d 0%, #831843 40%, #121212 100%); }
-    .theme-bordeaux   { background: linear-gradient(180deg, #68102b 0%, #320211 40%, #121212 100%); }
-    .theme-lightblue  { background: linear-gradient(180deg, #0284c7 0%, #0c4a6e 40%, #121212 100%); }
-
-    /* HEADER */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
-    .header-left {
+    .now-row {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .mini-logo {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
+    .cover {
+      width: 68px;
+      height: 68px;
+      border-radius: 14px;
       object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      background: #222;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.35);
     }
-    .header-text {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .meta { flex: 1; min-width: 0; }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1db954;
+      color: #04140a;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
     }
-    .header-subtitle {
-      font-size: 11px;
-      color: #1db954;
-      text-transform: uppercase;
-      font-weight: 600;
+    .live-badge::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #04140a;
+      animation: blink 1.2s infinite;
     }
-    .theme-btn {
-      background: transparent;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 50%;
-      transition: background 0.2s;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
     }
-    .theme-btn:hover { background: rgba(255,255,255,0.1); }
-
-    /* PORTADA */
-    .artwork-container {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-    }
-    .artwork-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: opacity 0.3s;
-    }
-
-    /* INFO PISTA */
-    .track-info {
-      margin-bottom: 18px;
-    }
-    #songTitle, .song-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 4px;
+    .station-name {
+      font-size: 16px;
+      font-weight: 800;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    #artistName, .artist-name {
-      font-size: 14px;
-      color: #b3b3b3;
+    .track-line {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #a7aeb8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-line span { color: #1db954; }
+    .artist-line {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #8b949e;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 14px;
     }
 
-    /* BARRA DE PROGRESO */
-    .progress-area {
-      margin-bottom: 20px;
+    .play-btn {
+      width: 54px; height: 54px; border-radius: 50%; border: none;
+      background: #fff; color: #0f1115; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 8px 18px rgba(0,0,0,0.25);
     }
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: #404040;
-      border-radius: 2px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #1db954;
-      border-radius: 2px;
-      transition: width 1s linear;
-    }
-    .time-info {
+    .play-btn:active { transform: scale(0.94); }
+    .play-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+    .transport {
+      margin-top: 14px;
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .timer {
       font-size: 12px;
-      color: #a7a7a7;
       font-variant-numeric: tabular-nums;
+      color: #c9d0d8;
+      min-width: 54px;
     }
-
-    /* CONTROLES DE REPRODUCCIÓN */
-    .controls {
+    .volume-wrap {
+      flex: 1;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 30px;
+      gap: 8px;
     }
-    .btn-icon {
-      background: transparent;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s, color 0.2s;
-      text-decoration: none;
+    .volume-wrap svg { width: 16px; height: 16px; fill: #9aa3ad; flex-shrink: 0; }
+    .volume {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px; border-radius: 999px;
+      background: #3a414b; outline: none;
     }
-    .btn-icon:active {
-      transform: scale(0.9);
-      color: #b3b3b3;
+    .volume::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
     }
-    .btn-icon svg {
-      fill: currentColor;
-    }
-    
-    .btn-play-pause {
-      width: 64px;
-      height: 64px;
-      background: #fff;
-      color: #000;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .btn-play-pause:active {
-      transform: scale(0.95);
-      background: #e6e6e6;
-    }
-    .btn-play-pause svg {
-      fill: currentColor;
-      width: 28px;
-      height: 28px;
+    .volume::-moz-range-thumb {
+      width: 14px; height: 14px; border: none; border-radius: 50%;
+      background: #fff; cursor: pointer;
     }
 
-    /* CRÉDITOS */
-    .arg-time-container {
-      margin-top: 30px;
-      padding-top: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      text-align: center;
+    .viz-wrap {
+      margin-top: 12px; height: 44px; border-radius: 10px;
+      overflow: hidden; background: rgba(255,255,255,0.04);
     }
-    .creator-credits {
-      font-size: 12px;
-      color: #888;
-      letter-spacing: 0.5px;
-    }
+    .viz-wrap canvas { width: 100%; height: 100%; display: block; }
 
-    /* MENÚ COMPARTIR */
-    .share-menu {
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-bottom: 12px;
-      background: #282828;
+    .stations-label {
+      margin: 16px 2px 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: #8b949e;
+    }
+    .stations {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .station {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      padding: 8px 0;
-      min-width: 180px;
-      display: none;
-      z-index: 50;
-      overflow: hidden;
-    }
-    .share-menu.open {
-      display: block;
-      animation: fadeInUp 0.2s ease;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateX(-50%) translateY(8px); }
-      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    .share-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 12px 18px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 500;
+      padding: 8px 6px 7px;
       cursor: pointer;
-      text-align: left;
-      transition: background 0.15s;
+      text-align: center;
+      color: #fff;
     }
-    .share-option:hover, .share-option:active {
-      background: #3e3e3e;
+    .station:hover { background: rgba(255,255,255,0.08); }
+    .station.active {
+      border-color: #1db954;
+      background: rgba(29, 185, 84, 0.12);
+      box-shadow: 0 0 0 1px rgba(29,185,84,0.25);
     }
-    .share-option svg {
-      flex-shrink: 0;
+    .station img {
+      width: 42px; height: 42px; border-radius: 10px;
+      object-fit: cover; display: block; margin: 0 auto 6px; background: #222;
     }
-    .share-wrapper {
-      position: relative;
-      display: flex;
+    .station span {
+      display: block; font-size: 10px; font-weight: 600; line-height: 1.2;
+      color: #cfd5dc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .station.active span { color: #1db954; }
+
+    .actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .action {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 9px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
     }
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
+    .action-app { background: #fff; color: #0f1115; }
+    .action-wa { background: #25D366; color: #053b1d; }
+    .action-spotify {
       background: #1db954;
-      color: #000;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 10px 20px;
-      border-radius: 24px;
-      opacity: 0;
+      color: #04140a;
+    }
+    .action-youtube {
+      background: #ff0000;
+      color: #fff;
+    }
+    .action.is-disabled {
+      opacity: 0.45;
       pointer-events: none;
-      transition: opacity 0.3s;
-      z-index: 100;
     }
-    .toast.show {
-      opacity: 1;
+    .action svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+    .footer-note {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 11px;
+      color: #667085;
+      max-width: 420px;
+      line-height: 1.45;
     }
 
-    .hidden-elements { display: none; }
-
-    /* Separador entre secciones */
-    .section-divider {
-      width: 100%;
-      max-width: 380px;
-      height: 1px;
-      background: rgba(255,255,255,0.15);
-      margin: 10px 0;
+    @media (min-width: 768px) {
+      body { padding: 28px 20px 50px; }
+      .page-header, .player-shell, .footer-note { max-width: 480px; }
+      .stations { gap: 10px; }
+      .station img { width: 48px; height: 48px; }
+    }
+    @media (min-width: 1024px) {
+      body {
+        min-height: 100vh;
+        justify-content: center;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(29,185,84,0.08), transparent 35%),
+          radial-gradient(circle at 80% 10%, rgba(37,211,102,0.06), transparent 30%),
+          linear-gradient(180deg, #eef2f7 0%, #f8fafc 100%);
+      }
+      .player-shell { max-width: 520px; padding: 18px; }
+      .stations { grid-template-columns: repeat(7, 1fr); }
+      .station span { font-size: 9px; }
     }
   </style>
 </head>
 <body>
+  <header class="page-header">
+    <img class="brand-logo" src="https://imgfz.com/i/McT0Z9D.jpeg" alt="Omarsi">
+    <h1 class="page-title">Radios de Omarsi</h1>
 
-  <!-- ========== SECCIÓN 1: FINLAY RADIO ========== -->
-  <div class="section-title">FinLay Radio</div>
-  <div class="player-container theme-dark" id="playerFinlay">
-    
-    <div class="header">
-      <div class="header-left">
-        <img class="mini-logo" src="https://imgfz.com/i/7Xf0Vtv.jpeg" alt="Logo FinLay">
-        <div>
-          <div class="header-text">FinLay Radio</div>
-          <div class="header-subtitle">En Vivo</div>
-        </div>
+  </header>
+
+  <section class="player-shell" aria-label="Reproductor de radios">
+    <div class="now-row">
+      <img class="cover" id="cover" src="https://imgfz.com/i/7Xf0Vtv.jpeg" alt="Portada">
+      <div class="meta">
+        <div class="live-badge">EN VIVO</div>
+        <div class="station-name" id="stationName">FinLay Radio</div>
+        <div class="track-line">♪ <span id="trackTitle">Conectando...</span></div>
+        <div class="artist-line" id="artistLine"></div>
       </div>
-      <button class="theme-btn" id="btnThemeFinlay" title="Cambiar color de fondo">
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.08-.09-.13-.21-.13-.33 0-.28.22-.5.5-.5H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9zm-4 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.5-4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.5 4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-        </svg>
+      <button type="button" class="play-btn" id="playBtn" title="Reproducir / Pausar" aria-label="Reproducir">
+        <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="iconPause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
     </div>
 
-    <div class="artwork-container">
-      <img id="imgTrackFinlay" src="https://imgfz.com/i/7Xf0Vtv.jpeg" alt="Portada">
-    </div>
-
-    <div class="track-info">
-      <div class="song-title" id="songTitleFinlay">Conectando...</div>
-      <div class="artist-name" id="artistNameFinlay">FinLay Radio</div>
-    </div>
-
-    <div class="progress-area">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFillFinlay"></div>
-      </div>
-      <div class="time-info">
-        <span id="timeFinlay">00:00</span>
-        <span>LIVE</span>
+    <div class="transport">
+      <div class="timer" id="timer">00:00:00</div>
+      <div class="volume-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <input class="volume" id="volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volumen">
       </div>
     </div>
 
-    <div class="controls">
-      <a class="btn-icon" href="https://wa.me/541134220329" target="_blank" rel="noopener" title="WhatsApp">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <div class="viz-wrap">
+      <canvas id="viz" width="480" height="44"></canvas>
+    </div>
+
+    <div class="stations-label">Elegí una radio</div>
+    <div class="stations" id="stations"></div>
+
+    <div class="actions">
+      <a class="action action-app" href="https://www.appcreator24.com/app4246409-xsgrbc" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+        App
       </a>
-      
-      <button class="btn-play-pause" id="ppFinlay" title="Reproducir/Pausar">
-        <svg id="icon-play-finlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="icon-pause-finlay" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
-
-      <div class="share-wrapper">
-        <button class="btn-icon" id="btnShareFinlay" title="Compartir">
-          <svg width="26" height="26" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
-        </button>
-        <div class="share-menu" id="shareMenuFinlay">
-          <button class="share-option" data-share="whatsapp" data-url="https://omarsitv.github.io/finlayenvivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            WhatsApp
-          </button>
-          <button class="share-option" data-share="facebook" data-url="https://omarsitv.github.io/finlayenvivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Facebook
-          </button>
-          <button class="share-option" data-share="copy" data-url="https://omarsitv.github.io/finlayenvivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Copiar enlace
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="arg-time-container">
-      <div class="creator-credits">Creado por ( Omarsi Company )</div>
-    </div>
-
-    <audio id="audioFinlay" crossorigin="anonymous" preload="none"></audio>
-  </div>
-
-  <div class="section-divider"></div>
-
-  <!-- ========== SECCIÓN 2: VIEJAS ROMÁNTICAS ========== -->
-  <div class="section-title">Viejas Románticas</div>
-  <div class="player-container theme-dark" id="playerViejas">
-    
-    <div class="header">
-      <div class="header-left">
-        <img class="mini-logo" src="https://imgfz.com/i/Em08gOQ.png" alt="Logo Viejas">
-        <div>
-          <div class="header-text">Viejas Románticas</div>
-          <div class="header-subtitle">En Vivo</div>
-        </div>
-      </div>
-      <button class="theme-btn" id="btnThemeViejas" title="Cambiar color de fondo">
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.08-.09-.13-.21-.13-.33 0-.28.22-.5.5-.5H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9zm-4 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.5-4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4.5 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.5 4c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="artwork-container">
-      <img id="imgTrackViejas" src="https://imgfz.com/i/Em08gOQ.png" alt="Portada">
-    </div>
-
-    <div class="track-info">
-      <div class="song-title" id="songTitleViejas">Conectando...</div>
-      <div class="artist-name" id="artistNameViejas">Viejas Románticas</div>
-    </div>
-
-    <div class="progress-area">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFillViejas"></div>
-      </div>
-      <div class="time-info">
-        <span id="timeViejas">00:00</span>
-        <span>LIVE</span>
-      </div>
-    </div>
-
-    <div class="controls">
-      <a class="btn-icon" href="https://wa.me/541134220329" target="_blank" rel="noopener" title="WhatsApp">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <a class="action action-wa" href="https://wa.me/541134220329" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
       </a>
-      
-      <button class="btn-play-pause" id="ppViejas" title="Reproducir/Pausar">
-        <svg id="icon-play-viejas" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="icon-pause-viejas" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
-
-      <div class="share-wrapper">
-        <button class="btn-icon" id="btnShareViejas" title="Compartir">
-          <svg width="26" height="26" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
-        </button>
-        <div class="share-menu" id="shareMenuViejas">
-          <button class="share-option" data-share="whatsapp" data-url="https://omarsitv.github.io/viejasrom_envivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            WhatsApp
-          </button>
-          <button class="share-option" data-share="facebook" data-url="https://omarsitv.github.io/viejasrom_envivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Facebook
-          </button>
-          <button class="share-option" data-share="copy" data-url="https://omarsitv.github.io/viejasrom_envivo/">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Copiar enlace
-          </button>
-        </div>
-      </div>
+      <a class="action action-spotify is-disabled" id="spotifyBtn" href="#" target="_blank" rel="noopener" title="Abrir en Spotify">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Spotify
+      </a>
+      <a class="action action-youtube is-disabled" id="youtubeBtn" href="#" target="_blank" rel="noopener" title="Buscar en YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.8 15.5v-7l6.2 3.5-6.2 3.5z"/></svg>
+        YouTube
+      </a>
     </div>
+  </section>
 
-    <div class="arg-time-container">
-      <div class="creator-credits">Creado por ( Omarsi Company )</div>
-    </div>
+  <p class="footer-note">Omarsi.AR - Derechos Reservados - 2026</p>
 
-    <audio id="audioViejas" crossorigin="anonymous" preload="none"></audio>
-  </div>
-
-  <div class="toast" id="toast">¡Enlace copiado!</div>
+  <audio id="audio" crossorigin="anonymous" preload="none"></audio>
 
 <script>
-(function(){
-  var themes = [
-    'theme-dark', 'theme-brick', 'theme-green', 'theme-brown',
-    'theme-blue', 'theme-gray', 'theme-pink', 'theme-bordeaux', 'theme-lightblue'
+(function () {
+  "use strict";
+
+  /**
+   * Spotify Web API (Client Credentials)
+   * Creá una app en https://developer.spotify.com/dashboard
+   * y pegá aquí Client ID y Client Secret.
+   * Nota: en producción es mejor obtener el token desde un backend.
+   */
+  var SPOTIFY_CLIENT_ID = "";
+  var SPOTIFY_CLIENT_SECRET = "";
+
+  var radios = [
+    { name: "FinLay Radio", short: "FinLay", stream: "https://stream.zeno.fm/pb7ywd9xcp4uv", logo: "https://imgfz.com/i/7Xf0Vtv.jpeg" },
+    { name: "Viejas Románticas", short: "Viejas", stream: "https://stream.zeno.fm/urmfkad2em0uv", logo: "https://imgfz.com/i/Em08gOQ.png" },
+    { name: "Cumbias y Rock", short: "Cumbias", stream: "https://stream.zeno.fm/jkodkmize49vv", logo: "https://imgfz.com/i/wNuO86C.jpeg" },
+    { name: "Joven Latina", short: "Joven", stream: "https://stream.zeno.fm/vw2af2mht68uv", logo: "https://imgfz.com/i/sUR9uEH.jpeg" },
+    { name: "Radio Henry Web", short: "Henry", stream: "https://stream.zeno.fm/73bvgeu2f78uv", logo: "https://imgfz.com/i/umKbrAt.jpeg" },
+    { name: "Cumbias a Pleno", short: "Pleno", stream: "https://stream.zeno.fm/1n6w364parzuv", logo: "https://imgfz.com/i/LJmKqGB.jpeg" },
+    { name: "Cristiana FCW", short: "FCW", stream: "https://stream.zeno.fm/4vuaijuxegzvv", logo: "https://imgfz.com/i/47Hpkwx.jpeg" }
   ];
 
-  function setupTheme(btnId, containerId) {
-    var idx = 0;
-    var container = document.getElementById(containerId);
-    var btn = document.getElementById(btnId);
-    btn.addEventListener('click', function() {
-      container.classList.remove(themes[idx]);
-      idx = (idx + 1) % themes.length;
-      container.classList.add(themes[idx]);
-    });
+  var audio = document.getElementById("audio");
+  var playBtn = document.getElementById("playBtn");
+  var iconPlay = document.getElementById("iconPlay");
+  var iconPause = document.getElementById("iconPause");
+  var cover = document.getElementById("cover");
+  var stationName = document.getElementById("stationName");
+  var trackTitle = document.getElementById("trackTitle");
+  var artistLine = document.getElementById("artistLine");
+  var timerEl = document.getElementById("timer");
+  var volume = document.getElementById("volume");
+  var stationsEl = document.getElementById("stations");
+  var spotifyBtn = document.getElementById("spotifyBtn");
+  var youtubeBtn = document.getElementById("youtubeBtn");
+  var canvas = document.getElementById("viz");
+  var ctx = canvas.getContext("2d");
+
+  var current = 0;
+  var playing = false;
+  var sec = 0;
+  var intentionalPause = true;
+  var reconnectTimer = null;
+  var waitingTimer = null;
+  var reconnectAttempts = 0;
+  var MAX_RECONNECT = 8;
+  var lastTrack = "";
+  var audioCtx = null;
+  var analyser = null;
+  var sourceNode = null;
+  var vizData = null;
+  var rafId = null;
+  var metaPoll = null;
+  var metaSse = null;
+  var coverRequest = 0;
+  var spotifyToken = null;
+  var spotifyTokenExp = 0;
+
+  function fmt(n) { return n < 10 ? "0" + n : String(n); }
+  function fmtTime(s) {
+    return fmt(Math.floor(s / 3600)) + ":" + fmt(Math.floor((s % 3600) / 60)) + ":" + fmt(s % 60);
   }
-  setupTheme('btnThemeFinlay', 'playerFinlay');
-  setupTheme('btnThemeViejas', 'playerViejas');
 
-
-  // ===== COMPARTIR =====
-  function setupShare(btnId, menuId) {
-    var btn = document.getElementById(btnId);
-    var menu = document.getElementById(menuId);
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      // cerrar el otro menú
-      document.querySelectorAll('.share-menu').forEach(function(m){ m.classList.remove('open'); });
-      menu.classList.toggle('open');
-    });
-  }
-  setupShare('btnShareFinlay', 'shareMenuFinlay');
-  setupShare('btnShareViejas', 'shareMenuViejas');
-
-  document.addEventListener('click', function() {
-    document.querySelectorAll('.share-menu').forEach(function(m){ m.classList.remove('open'); });
-  });
-  document.querySelectorAll('.share-menu').forEach(function(m){
-    m.addEventListener('click', function(e){ e.stopPropagation(); });
-  });
-
-  document.querySelectorAll('.share-option').forEach(function(opt){
-    opt.addEventListener('click', function() {
-      var type = this.getAttribute('data-share');
-      var url = this.getAttribute('data-url');
-      var text = "Escuchá en vivo 🎵 ";
-      if (type === 'whatsapp') {
-        window.open("https://wa.me/?text=" + encodeURIComponent(text + url), "_blank");
-      } else if (type === 'facebook') {
-        window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url), "_blank", "width=600,height=400");
-      } else if (type === 'copy') {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(showToast).catch(fallbackCopy.bind(null, url));
-        } else {
-          fallbackCopy(url);
+  function bufferAhead() {
+    try {
+      if (!audio.buffered || !audio.buffered.length) return 0;
+      var t = audio.currentTime || 0;
+      for (var i = 0; i < audio.buffered.length; i++) {
+        if (t >= audio.buffered.start(i) && t <= audio.buffered.end(i)) {
+          return audio.buffered.end(i) - t;
         }
       }
-      document.querySelectorAll('.share-menu').forEach(function(m){ m.classList.remove('open'); });
-    });
-  });
-
-  function fallbackCopy(url) {
-    var ta = document.createElement("textarea");
-    ta.value = url;
-    ta.style.position = "fixed";
-    ta.style.left = "-9999px";
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand("copy"); showToast(); } catch(e) {}
-    document.body.removeChild(ta);
-  }
-  function showToast() {
-    var t = document.getElementById('toast');
-    t.classList.add("show");
-    setTimeout(function(){ t.classList.remove("show"); }, 2000);
+      return Math.max(0, audio.buffered.end(audio.buffered.length - 1) - t);
+    } catch (e) { return 0; }
   }
 
-  // ===== PLAYER GENERICO (buffer optimizado + reconexión inteligente) =====
-  var activePlayerStop = null;
+  function streamUrl(forceNew) {
+    var base = radios[current].stream;
+    if (!forceNew) return base;
+    return base + (base.indexOf("?") >= 0 ? "&" : "?") + "_=" + Date.now();
+  }
 
-  function createPlayer(opts) {
-    var audio = document.getElementById(opts.audioId);
-    var playing = false;
-    var iconPlay = document.getElementById(opts.iconPlayId);
-    var iconPause = document.getElementById(opts.iconPauseId);
-    var progressFill = document.getElementById(opts.progressId);
-    var timeEl = document.getElementById(opts.timeId);
-    var sec = 0;
-    var STREAM_URL = opts.streamUrl;
-    var DEFAULT_IMG = opts.defaultImg;
-    var MOUNT = STREAM_URL.split('/').pop().split('?')[0];
-    var reconnectTimer = null;
-    var waitingTimer = null;
-    var intentionalPause = true;
-    var reconnectAttempts = 0;
-    var MAX_RECONNECT = 8;
+  function loadStream(forceNew) {
+    clearTimeout(waitingTimer);
+    audio.src = streamUrl(!!forceNew);
+    try { audio.load(); } catch (e) {}
+  }
 
-    // Configuración de buffer / red
-    audio.preload = 'none';
-    try { audio.crossOrigin = 'anonymous'; } catch(e) {}
+  function clearReconnect() {
+    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+  }
 
-    function bufferAhead() {
-      // Segundos bufferizados por delante de currentTime
-      try {
-        if (!audio.buffered || audio.buffered.length === 0) return 0;
-        var t = audio.currentTime || 0;
-        for (var i = 0; i < audio.buffered.length; i++) {
-          if (t >= audio.buffered.start(i) && t <= audio.buffered.end(i)) {
-            return audio.buffered.end(i) - t;
-          }
-        }
-        // Si no hay rango que contenga currentTime, devolver el final del último rango
-        return Math.max(0, audio.buffered.end(audio.buffered.length - 1) - t);
-      } catch (e) {
-        return 0;
-      }
-    }
-
-    function loadStream(forceNew) {
-      clearTimeout(waitingTimer);
-      // Solo cache-bust cuando es reconexión forzada (evita tirar buffer bueno)
-      var url = STREAM_URL;
-      if (forceNew) {
-        url += (STREAM_URL.indexOf('?') >= 0 ? '&' : '?') + '_=' + Date.now();
-      }
-      if (audio.src !== url && !audio.src.endsWith(STREAM_URL) && forceNew) {
-        audio.src = url;
-      } else if (!audio.src || forceNew || audio.src.indexOf(STREAM_URL.split('?')[0]) === -1) {
-        audio.src = url;
-      }
-      try { audio.load(); } catch(e) {}
-    }
-
-    function fmt(n) { return n < 10 ? '0' + n : n; }
-    function showTime() {
-      timeEl.textContent = fmt(Math.floor(sec / 60) % 60) + ':' + fmt(sec % 60);
-      progressFill.style.width = ((sec % 180) / 180 * 100) + '%';
-    }
-    setInterval(function(){ if(playing) { sec++; showTime(); } }, 1000);
-
-    function clearReconnect() {
-      if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
-        reconnectTimer = null;
-      }
-    }
-
-    function scheduleReconnect(reason) {
+  function scheduleReconnect() {
+    if (!playing || intentionalPause || reconnectAttempts >= MAX_RECONNECT) return;
+    if (bufferAhead() > 2.5) return;
+    clearReconnect();
+    var delay = Math.min(1200 + reconnectAttempts * 1400, 9000);
+    reconnectTimer = setTimeout(function () {
       if (!playing || intentionalPause) return;
-      if (reconnectAttempts >= MAX_RECONNECT) {
-        console.warn('[' + opts.defaultArtist + '] Máximos reintentos alcanzados');
+      reconnectAttempts++;
+      loadStream(true);
+      tryPlay();
+    }, delay);
+  }
+
+  function tryPlay() {
+    if (!playing || intentionalPause) return;
+    var p = audio.play();
+    if (p !== undefined) {
+      p.then(function () { reconnectAttempts = 0; })
+       .catch(function () { scheduleReconnect(); });
+    }
+  }
+
+  function setPlayingUI(isOn) {
+    iconPlay.style.display = isOn ? "none" : "block";
+    iconPause.style.display = isOn ? "block" : "none";
+  }
+
+  function setupAnalyser() {
+    if (analyser) return;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.8;
+      sourceNode = audioCtx.createMediaElementSource(audio);
+      sourceNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      vizData = new Uint8Array(analyser.frequencyBinCount);
+    } catch (e) { analyser = null; }
+  }
+
+  function drawViz() {
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    if (!analyser || !playing) {
+      ctx.strokeStyle = "rgba(29,185,84,0.28)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (var x = 0; x < w; x++) {
+        var y = h / 2 + Math.sin(x * 0.035 + Date.now() * 0.002) * 3.5;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      if (!playing) rafId = requestAnimationFrame(drawViz);
+      return;
+    }
+    analyser.getByteFrequencyData(vizData);
+    var bars = 42, gap = 2, barW = (w - gap * (bars - 1)) / bars;
+    var step = Math.floor(vizData.length / bars);
+    var sum = 0;
+    for (var s = 0; s < vizData.length; s++) sum += vizData[s];
+    var useFake = sum < 10;
+    var t = Date.now() * 0.004;
+    for (var i = 0; i < bars; i++) {
+      var v = useFake
+        ? 0.2 + 0.4 * Math.abs(Math.sin(t + i * 0.33)) + 0.15 * Math.abs(Math.sin(t * 1.5 + i * 0.12))
+        : vizData[i * step] / 255;
+      var barH = Math.max(2, v * h * 0.92);
+      var x = i * (barW + gap);
+      var y = (h - barH) / 2;
+      var g = ctx.createLinearGradient(0, y, 0, y + barH);
+      g.addColorStop(0, "#1ed760");
+      g.addColorStop(1, "#1db954");
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y, barW, barH);
+    }
+    rafId = requestAnimationFrame(drawViz);
+  }
+
+  function startViz() {
+    setupAnalyser();
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(function () {});
+    if (rafId) cancelAnimationFrame(rafId);
+    drawViz();
+  }
+
+  function stopViz() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "rgba(29,185,84,0.2)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.stroke();
+  }
+
+  function stopMeta() {
+    if (metaSse) { try { metaSse.close(); } catch (e) {} metaSse = null; }
+    if (metaPoll) { clearInterval(metaPoll); metaPoll = null; }
+  }
+
+  function setMusicLinks(spotifyUrl, query) {
+    if (spotifyBtn) {
+      if (spotifyUrl) {
+        spotifyBtn.href = spotifyUrl;
+        spotifyBtn.classList.remove("is-disabled");
+      } else if (query) {
+        spotifyBtn.href = "https://open.spotify.com/search/" + encodeURIComponent(query);
+        spotifyBtn.classList.remove("is-disabled");
+      } else {
+        spotifyBtn.href = "#";
+        spotifyBtn.classList.add("is-disabled");
+      }
+    }
+    if (youtubeBtn) {
+      if (query) {
+        youtubeBtn.href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(query);
+        youtubeBtn.classList.remove("is-disabled");
+      } else {
+        youtubeBtn.href = "#";
+        youtubeBtn.classList.add("is-disabled");
+      }
+    }
+  }
+
+  function setCoverSafe(url, fallback) {
+    var req = ++coverRequest;
+    var img = new Image();
+    img.onload = function () { if (req === coverRequest) cover.src = url; };
+    img.onerror = function () { if (req === coverRequest) cover.src = fallback || radios[current].logo; };
+    img.src = url;
+  }
+
+  function parseMeta(raw) {
+    raw = (raw || "").trim();
+    if (!raw) return null;
+    var parts = raw.split(/\s[-–—]\s/);
+    if (parts.length >= 2) {
+      return { artist: parts[0].trim(), title: parts.slice(1).join(" - ").trim(), raw: raw };
+    }
+    return { artist: radios[current].name, title: raw, raw: raw };
+  }
+
+  // ---- Spotify API ----
+  function getSpotifyToken() {
+    return new Promise(function (resolve) {
+      if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+        resolve(null);
         return;
       }
-      // Si todavía hay buffer útil, no reconectar todavía
-      if (bufferAhead() > 2) return;
+      var now = Date.now();
+      if (spotifyToken && now < spotifyTokenExp - 30000) {
+        resolve(spotifyToken);
+        return;
+      }
+      var body = "grant_type=client_credentials";
+      var basic = btoa(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET);
+      fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Basic " + basic
+        },
+        body: body
+      }).then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.access_token) {
+            spotifyToken = d.access_token;
+            spotifyTokenExp = Date.now() + (d.expires_in || 3600) * 1000;
+            resolve(spotifyToken);
+          } else resolve(null);
+        })
+        .catch(function () { resolve(null); });
+    });
+  }
 
-      clearReconnect();
-      var delay = Math.min(1000 + reconnectAttempts * 1200, 8000);
-      reconnectTimer = setTimeout(function() {
-        if (!playing || intentionalPause) return;
-        reconnectAttempts++;
-        console.log('[' + opts.defaultArtist + '] Reconectando (' + reason + ') intento ' + reconnectAttempts);
-        loadStream(true);
-        tryPlay();
-      }, delay);
-    }
+  function searchSpotify(artist, title) {
+    var q = (artist + " " + title).replace(/[\(\[].*?[\)\]]/g, " ").replace(/\s+/g, " ").trim();
+    if (!q) return Promise.resolve(null);
 
-    function tryPlay() {
-      if (!playing || intentionalPause) return;
-      var p = audio.play();
-      if (p !== undefined) {
-        p.then(function() {
-          reconnectAttempts = 0;
-        }).catch(function() {
-          scheduleReconnect('play-failed');
+    return getSpotifyToken().then(function (token) {
+      if (!token) return null;
+      var url = "https://api.spotify.com/v1/search?type=track&limit=1&q=" + encodeURIComponent(q);
+      return fetch(url, { headers: { Authorization: "Bearer " + token } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var item = d && d.tracks && d.tracks.items && d.tracks.items[0];
+          if (!item) return null;
+          var art = item.album && item.album.images && item.album.images[0] && item.album.images[0].url;
+          return {
+            artwork: art || null,
+            url: item.external_urls && item.external_urls.spotify,
+            name: item.name,
+            artist: item.artists && item.artists[0] && item.artists[0].name
+          };
+        })
+        .catch(function () { return null; });
+    });
+  }
+
+  function searchItunes(artist, title) {
+    var q = (artist + " " + title).replace(/[\(\[].*?[\)\]]/g, " ").replace(/\s+/g, " ").trim();
+    return new Promise(function (resolve) {
+      if (!q) { resolve(null); return; }
+      $.ajax({
+        url: "https://itunes.apple.com/search",
+        data: { term: q, media: "music", limit: 1 },
+        dataType: "jsonp",
+        timeout: 6000,
+        success: function (res) {
+          if (res && res.results && res.results.length && res.results[0].artworkUrl100) {
+            resolve(res.results[0].artworkUrl100.replace("100x100bb", "600x600bb"));
+          } else resolve(null);
+        },
+        error: function () { resolve(null); }
+      });
+    });
+  }
+
+  function enrichTrack(artist, title) {
+    var fallback = radios[current].logo;
+    var query = (artist + " " + title).trim();
+    setMusicLinks(null, query);
+
+    searchSpotify(artist, title).then(function (sp) {
+      if (sp) {
+        if (sp.artwork) setCoverSafe(sp.artwork, fallback);
+        if (sp.url) setMusicLinks(sp.url, query);
+        else setMusicLinks(null, query);
+        if (!sp.artwork) {
+          searchItunes(artist, title).then(function (art) {
+            if (art) setCoverSafe(art, fallback);
+            else setCoverSafe(fallback);
+          });
+        }
+      } else {
+        setMusicLinks(null, query);
+        searchItunes(artist, title).then(function (art) {
+          if (art) setCoverSafe(art, fallback);
+          else setCoverSafe(fallback);
         });
       }
-    }
+    });
+  }
 
-    function updatePlayState() {
-      if (playing) {
-        intentionalPause = false;
-        iconPlay.style.display = 'none';
-        iconPause.style.display = 'block';
-        // Cargar solo al iniciar (no en idle)
-        if (!audio.src || audio.readyState === 0) {
-          loadStream(true);
-        }
-        tryPlay();
-      } else {
-        intentionalPause = true;
-        clearReconnect();
-        clearTimeout(waitingTimer);
-        audio.pause();
-        // Liberar buffer / conexión al pausar (ahorra datos y evita stream zombie)
-        try {
-          audio.removeAttribute('src');
-          audio.load();
-        } catch(e) {}
-        iconPlay.style.display = 'block';
-        iconPause.style.display = 'none';
-        reconnectAttempts = 0;
+  function handleTitle(full, extra) {
+    var meta = parseMeta(full);
+    if (!meta) return;
+    if (meta.raw === lastTrack) return;
+    lastTrack = meta.raw;
+
+    var directArt = extra && (extra.cover || extra.image || extra.img || extra.artwork || extra.cover_url || extra.art);
+    var artist = meta.artist && meta.artist !== meta.title ? meta.artist : radios[current].name;
+
+    trackTitle.textContent = meta.title || meta.raw;
+    if (artistLine) artistLine.textContent = artist;
+
+    if (directArt) {
+      setCoverSafe(directArt, radios[current].logo);
+      setMusicLinks(null, artist + " " + (meta.title || ""));
+    }
+    enrichTrack(meta.artist, meta.title);
+  }
+
+  function startMeta() {
+    stopMeta();
+    lastTrack = "";
+    trackTitle.textContent = "Conectando metadatos...";
+    if (artistLine) artistLine.textContent = radios[current].name;
+    cover.src = radios[current].logo;
+    setMusicLinks(null, null);
+
+    var stream = radios[current].stream;
+    var mount = stream.split("/").pop().split("?")[0];
+    var sseOk = false;
+    var pollStarted = false;
+
+    function startPolling() {
+      if (pollStarted) return;
+      pollStarted = true;
+      function poll() {
+        $.getJSON("https://twj.es/get_stream_title/?url=" + encodeURIComponent(stream))
+          .done(function (d) {
+            var title = d.title || d.streamTitle || d.stream_title || d.StreamTitle || d.song || "";
+            if (title) handleTitle(title, d);
+          })
+          .fail(function () {});
       }
+      poll();
+      metaPoll = setInterval(poll, 12000);
     }
 
-    // --- Eventos de red / buffer ---
-    audio.addEventListener('error', function() {
-      if (playing) scheduleReconnect('error');
+    if (window.EventSource) {
+      try {
+        metaSse = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/" + mount);
+        metaSse.onmessage = function (ev) {
+          try {
+            var d = JSON.parse(ev.data);
+            var title = d.streamTitle || d.title || d.song || "";
+            if (title) { sseOk = true; handleTitle(title, d); }
+          } catch (e) {}
+        };
+        metaSse.onerror = function () { if (!pollStarted) startPolling(); };
+      } catch (e) { startPolling(); }
+    } else {
+      startPolling();
+    }
+
+    setTimeout(function () { if (!sseOk) startPolling(); }, 5000);
+  }
+
+  function selectStation(index, autoPlay) {
+    if (index < 0 || index >= radios.length) return;
+    var wasPlaying = playing || !!autoPlay;
+    current = index;
+    var r = radios[current];
+    cover.src = r.logo;
+    stationName.textContent = r.name;
+    document.querySelectorAll(".station").forEach(function (el, i) {
+      el.classList.toggle("active", i === current);
     });
-    audio.addEventListener('ended', function() {
-      if (playing) scheduleReconnect('ended');
-    });
-    // stalled: solo reconectar si el buffer está vacío un rato
-    audio.addEventListener('stalled', function() {
-      if (!playing) return;
+    sec = 0;
+    timerEl.textContent = "00:00:00";
+    startMeta();
+
+    if (wasPlaying) {
+      intentionalPause = false;
+      playing = true;
+      setPlayingUI(true);
+      reconnectAttempts = 0;
+      loadStream(true);
+      tryPlay();
+      startViz();
+    } else {
+      intentionalPause = true;
+      playing = false;
+      setPlayingUI(false);
+      try { audio.removeAttribute("src"); audio.load(); } catch (e) {}
+      stopViz();
+    }
+  }
+
+  function togglePlay() {
+    if (!playing) {
+      intentionalPause = false;
+      playing = true;
+      setPlayingUI(true);
+      reconnectAttempts = 0;
+      loadStream(true);
+      tryPlay();
+      startViz();
+    } else {
+      intentionalPause = true;
+      playing = false;
+      setPlayingUI(false);
+      clearReconnect();
       clearTimeout(waitingTimer);
-      waitingTimer = setTimeout(function() {
-        if (playing && bufferAhead() < 0.5) scheduleReconnect('stalled');
-      }, 6000);
-    });
-    audio.addEventListener('waiting', function() {
-      if (!playing) return;
-      clearTimeout(waitingTimer);
-      // Esperar más tiempo: streams live a veces tardan en llenar buffer
-      waitingTimer = setTimeout(function() {
-        if (playing && bufferAhead() < 1 && audio.readyState < 3) {
-          scheduleReconnect('waiting-timeout');
-        }
-      }, 12000);
-    });
-    audio.addEventListener('playing', function() {
+      audio.pause();
+      try { audio.removeAttribute("src"); audio.load(); } catch (e) {}
+      stopViz();
+    }
+  }
+
+  radios.forEach(function (r, i) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "station" + (i === 0 ? " active" : "");
+    btn.innerHTML = '<img src="' + r.logo + '" alt=""><span>' + r.short + "</span>";
+    btn.title = r.name;
+    btn.addEventListener("click", function () { selectStation(i, true); });
+    stationsEl.appendChild(btn);
+  });
+
+  playBtn.addEventListener("click", togglePlay);
+  volume.addEventListener("input", function () { audio.volume = parseFloat(volume.value); });
+  audio.volume = 1;
+
+  setInterval(function () {
+    if (playing) {
+      sec++;
+      timerEl.textContent = fmtTime(sec);
+    }
+  }, 1000);
+
+  audio.addEventListener("error", function () { if (playing) scheduleReconnect(); });
+  audio.addEventListener("ended", function () { if (playing) scheduleReconnect(); });
+  audio.addEventListener("stalled", function () {
+    if (!playing) return;
+    clearTimeout(waitingTimer);
+    waitingTimer = setTimeout(function () {
+      if (playing && bufferAhead() < 0.5) scheduleReconnect();
+    }, 7000);
+  });
+  audio.addEventListener("waiting", function () {
+    if (!playing) return;
+    clearTimeout(waitingTimer);
+    waitingTimer = setTimeout(function () {
+      if (playing && bufferAhead() < 1 && audio.readyState < 3) scheduleReconnect();
+    }, 14000);
+  });
+  audio.addEventListener("playing", function () {
+    clearTimeout(waitingTimer);
+    clearReconnect();
+    reconnectAttempts = 0;
+  });
+  audio.addEventListener("canplay", function () {
+    clearTimeout(waitingTimer);
+    if (playing) tryPlay();
+  });
+  audio.addEventListener("progress", function () {
+    if (bufferAhead() > 3.5) {
       clearTimeout(waitingTimer);
       clearReconnect();
       reconnectAttempts = 0;
-    });
-    audio.addEventListener('canplay', function() {
-      clearTimeout(waitingTimer);
-      if (playing) tryPlay();
-    });
-    // Cuando hay datos en buffer, cancelar reconexión pendiente
-    audio.addEventListener('progress', function() {
-      if (bufferAhead() > 3) {
-        clearTimeout(waitingTimer);
-        clearReconnect();
-        reconnectAttempts = 0;
-      }
-    });
-
-    function stopThis() {
-      if (playing) {
-        playing = false;
-        updatePlayState();
-      }
     }
-
-    document.getElementById(opts.ppId).addEventListener('click', function() {
-      if (!playing) {
-        if (activePlayerStop && activePlayerStop !== stopThis) {
-          activePlayerStop();
-        }
-        activePlayerStop = stopThis;
-        playing = true;
-        reconnectAttempts = 0;
-        loadStream(true);
-      } else {
-        playing = false;
-        if (activePlayerStop === stopThis) activePlayerStop = null;
-      }
-      updatePlayState();
-    });
-
-
-    // Metadata
-    var lastTrack = "";
-    function setCover(url) {
-      var img = document.getElementById(opts.imgId);
-      img.style.opacity = 0;
-      setTimeout(function(){ img.src = url; img.style.opacity = 1; }, 300);
-    }
-    function findCover(artist, song, apiImg) {
-      var clean = (artist + " " + song).replace(/[\(\[].*?[\)\]]/g, "").trim();
-      $.ajax({
-        url: "https://itunes.apple.com/search?term=" + encodeURIComponent(clean) + "&media=music&limit=1",
-        dataType: "jsonp",
-        timeout: 6000,
-        success: function(res) {
-          if (res.results && res.results.length && res.results[0].artworkUrl100) {
-            setCover(res.results[0].artworkUrl100.replace('100x100bb','600x600bb'));
-          } else {
-            setCover(apiImg || DEFAULT_IMG);
-          }
-        },
-        error: function(){ setCover(apiImg || DEFAULT_IMG); }
-      });
-    }
-    function handleTitle(full, apiImg) {
-      full = (full || "").trim();
-      if (!full || full === lastTrack) return;
-      lastTrack = full;
-      var parts = full.split(" - ");
-      var artist = parts.length > 1 ? parts[0].trim() : opts.defaultArtist;
-      var song = parts.length > 1 ? parts.slice(1).join(" - ").trim() : full;
-      document.getElementById(opts.artistId).textContent = artist;
-      document.getElementById(opts.songId).textContent = song;
-      findCover(artist, song, apiImg);
-    }
-
-    var sseOk = false;
-    function startSSE() {
-      if (!window.EventSource) return startPolling();
-      var es = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/" + MOUNT);
-      es.onmessage = function(ev) {
-        try {
-          var d = JSON.parse(ev.data);
-          if (d.streamTitle) { sseOk = true; handleTitle(d.streamTitle); }
-        } catch(e){}
-      };
-      es.onerror = function(){};
-      setTimeout(function(){ if (!sseOk) startPolling(); }, 10000);
-    }
-    var polling = false;
-    function startPolling() {
-      if (polling) return;
-      polling = true;
-      function poll() {
-        $.getJSON("https://twj.es/get_stream_title/?url=" + encodeURIComponent(STREAM_URL), function(d) {
-          var title = d.title || d.streamTitle || d.stream_title || d.StreamTitle || "";
-          var img = d.cover || d.image || d.img || d.artwork || d.cover_url || "";
-          handleTitle(title, img);
-        }).fail(function(){});
-      }
-      poll();
-      setInterval(poll, 15000);
-    }
-    startSSE();
-  }
-
-  createPlayer({
-    audioId: 'audioFinlay',
-    ppId: 'ppFinlay',
-    iconPlayId: 'icon-play-finlay',
-    iconPauseId: 'icon-pause-finlay',
-    progressId: 'progressFillFinlay',
-    timeId: 'timeFinlay',
-    imgId: 'imgTrackFinlay',
-    songId: 'songTitleFinlay',
-    artistId: 'artistNameFinlay',
-    streamUrl: 'https://stream.zeno.fm/pb7ywd9xcp4uv',
-    defaultImg: 'https://imgfz.com/i/7Xf0Vtv.jpeg',
-    defaultArtist: 'FinLay Radio'
   });
 
-  createPlayer({
-    audioId: 'audioViejas',
-    ppId: 'ppViejas',
-    iconPlayId: 'icon-play-viejas',
-    iconPauseId: 'icon-pause-viejas',
-    progressId: 'progressFillViejas',
-    timeId: 'timeViejas',
-    imgId: 'imgTrackViejas',
-    songId: 'songTitleViejas',
-    artistId: 'artistNameViejas',
-    streamUrl: 'https://stream.zeno.fm/urmfkad2em0uv',
-    defaultImg: 'https://imgfz.com/i/Em08gOQ.png',
-    defaultArtist: 'Viejas Románticas'
-  });
+  selectStation(0, false);
+  stopViz();
 })();
 </script>
 </body>
 </html>
-    fetchBuenosAiresWeather();
-    setInterval(fetchBuenosAiresWeather, 600000);
-  })();
-</script>
-<!-- FIN DEL WIDGET FINLAY RADIO -->
